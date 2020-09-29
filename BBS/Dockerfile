@@ -5,7 +5,6 @@ RUN mvn clean install -DskipTests=true
 ARG JAR_FILE=target/*.jar
 COPY ${JAR_FILE} application.jar
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
-RUN ls -alR
 
 FROM gcr.io/distroless/java:8
 ARG DEPENDENCY=/app/target/dependency
