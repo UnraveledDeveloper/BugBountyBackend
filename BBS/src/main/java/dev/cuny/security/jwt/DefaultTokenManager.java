@@ -1,6 +1,9 @@
 package dev.cuny.security.jwt;
 
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.stereotype.Service;
+
+import java.security.Key;
 
 /**
  * @author William Gentry
@@ -8,9 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class DefaultTokenManager extends AbstractTokenManager {
 
-  private static final String signingKey = "BugBountyBugBountyBugBountyBugBountyBugBounty";
-
   public DefaultTokenManager() {
-    super(signingKey);
+    super();
+  }
+
+  public DefaultTokenManager(Key signingKey, SignatureAlgorithm signatureAlgorithm) {
+    super(signingKey, signatureAlgorithm);
   }
 }

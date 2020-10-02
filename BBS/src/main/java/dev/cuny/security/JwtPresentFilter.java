@@ -36,6 +36,7 @@ public class JwtPresentFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    logger.info("Incoming {} request to {}", request.getMethod(), request.getRequestURI());
     String header = request.getHeader(HttpHeaders.AUTHORIZATION);
     Authentication authentication = null;
     if (!StringUtils.isBlank(header)) {
@@ -47,7 +48,7 @@ public class JwtPresentFilter extends OncePerRequestFilter {
       UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(details.getUsername(), details.getPassword(), details.getAuthorities());
       auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
       SecurityContextHolder.getContext().setAuthentication(auth);
-      logger.info("Successfully set security context!");
+      logger.info("Successfully set security context for {} request to {}", request.getMethod(), request.getRequestURI());
     }
     filterChain.doFilter(request, response);
   }

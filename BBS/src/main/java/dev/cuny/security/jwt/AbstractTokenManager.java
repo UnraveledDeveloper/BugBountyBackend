@@ -3,11 +3,13 @@ package dev.cuny.security.jwt;
 import dev.cuny.security.BugBountyRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.apache.maven.shared.utils.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
@@ -22,10 +24,18 @@ import java.util.stream.Collectors;
 public abstract class AbstractTokenManager implements TokenParser, TokenSigner {
 
   private final Key signingKey;
+  private final SignatureAlgorithm signatureAlgorithm;
   public static final String TOKEN_HEADER_PREFIX = "Bearer ";
 
-  public AbstractTokenManager(String signingKey) {
-    this.signingKey = Keys.hmacShaKeyFor(signingKey.getBytes());
+  public AbstractTokenManager() {
+    final SecretKey secret = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    this.signingKey = Keys.hmacShaKeyFor(secret.getEncoded());
+    this.signatureAlgorithm = SignatureAlgorithm.HS256;
+  }
+
+  public AbstractTokenManager(Key signingKey, SignatureAlgorithm signatureAlgorithm) {
+    this.signingKey = signingKey;
+    this.signatureAlgorithm = signatureAlgorithm;
   }
 
   @Override
@@ -46,7 +56,7 @@ public abstract class AbstractTokenManager implements TokenParser, TokenSigner {
     Date expiresAt = Date.from(issuedAt.toInstant().plus(1L, ChronoUnit.DAYS));
     List<String> authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
     final String token = Jwts.builder()
-               .signWith(signingKey)
+               .signWith(signingKey, signatureAlgorithm)
                .setSubject(authentication.getName())
                .setIssuedAt(issuedAt)
                .setExpiration(expiresAt)

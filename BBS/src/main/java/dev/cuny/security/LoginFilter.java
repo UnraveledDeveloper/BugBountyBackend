@@ -2,6 +2,7 @@ package dev.cuny.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.cuny.dtos.LoginFormDto;
+import dev.cuny.repositories.ClientRepository;
 import dev.cuny.security.jwt.JwtSuccessHandler;
 import dev.cuny.security.jwt.TokenSigner;
 import org.springframework.http.HttpMethod;
@@ -24,11 +25,11 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
   private final ObjectMapper mapper;
   private final AuthenticationProvider authenticationProvider;
 
-  protected LoginFilter(ObjectMapper mapper, AuthenticationProvider authenticationProvider, TokenSigner tokenSigner) {
+  protected LoginFilter(ObjectMapper mapper, AuthenticationProvider authenticationProvider, TokenSigner tokenSigner, ClientRepository clientRepository) {
     super(new AntPathRequestMatcher("/login", HttpMethod.POST.toString()));
     this.mapper = mapper;
     this.authenticationProvider = authenticationProvider;
-    this.setAuthenticationSuccessHandler(new JwtSuccessHandler(tokenSigner));
+    this.setAuthenticationSuccessHandler(new JwtSuccessHandler(tokenSigner, clientRepository, mapper));
   }
 
   @Override
