@@ -6,6 +6,7 @@ import org.apache.maven.shared.utils.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,6 +37,11 @@ public class JwtPresentFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    // Don't check for token when authenticating
+    if (HttpMethod.POST.name().equals(request.getMethod()) && "/login".equals(request.getRequestURI())) {
+      filterChain.doFilter(request, response);
+      return;
+    }
     logger.info("Incoming {} request to {}", request.getMethod(), request.getRequestURI());
     String header = request.getHeader(HttpHeaders.AUTHORIZATION);
     Authentication authentication = null;
