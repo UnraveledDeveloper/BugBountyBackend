@@ -7,16 +7,13 @@ import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import dev.cuny.dtos.EmailDto;
@@ -32,10 +29,10 @@ public class ClientController {
 	private static Logger logger = LoggerFactory.getLogger(ClientController.class);
 	@Autowired
 	ClientService cs;
-	
+
 	@Autowired
 	BugReportService brs;
-	
+
 	@PostMapping(value = "/clients")
 	public Client signup(@RequestBody Client client) {
 		try {
@@ -60,14 +57,14 @@ public class ClientController {
 		logger.info(str);
 		return cs.updateClient(client);
 	}
-	
+
 	@GetMapping(value = "/clients/{id}")
 	public Client getClientById(@PathVariable int id) {
 			return cs.getClientById(id);
 	}
 
 	@GetMapping(value = "/clients/{id}/solutions")
-	public <T> T getSolutionsByClientId(@PathVariable Integer id, @RequestParam(required = false) Boolean count) {	
+	public <T> T getSolutionsByClientId(@PathVariable Integer id, @RequestParam(required = false) Boolean count) {
 		if(count == null)
 			count = false;
 		if(count.booleanValue()) {
@@ -78,9 +75,9 @@ public class ClientController {
 			return (T) cs.getSolutionsByClient(id);
 		}
 	}
-	
+
 	@GetMapping(value = "/clients/{id}/bugreports")
-	public <T> T getBugReportsByClientId(@PathVariable Integer id, @RequestParam(required = false) Boolean count) {	
+	public <T> T getBugReportsByClientId(@PathVariable Integer id, @RequestParam(required = false) Boolean count) {
 		if(count == null)
 			count = false;
 		if(count.booleanValue()) {
@@ -105,13 +102,13 @@ public class ClientController {
 			}
 		}
 	}
-	
+
 	@GetMapping(value = "/clients")
 	public <T> T getAllClients(
 			@RequestParam (required = false) Boolean count,
-			@RequestParam(required = false) String username, 
+			@RequestParam(required = false) String username,
 			@RequestParam(required = false) String email) {
-		
+
 		if (username != null) {
 			return (T) cs.getClientByUsername(username);
 		}
@@ -133,7 +130,7 @@ public class ClientController {
 	public int getClientsPoints(@PathVariable int id) {
 		return cs.getClientPoints(id);
 	}
-	
+
 	@GetMapping(value = "/leaderboard/usernames")
 	public List<String> getLeaderboardusernames() {
 		return cs.leaderboardusername();
@@ -158,8 +155,8 @@ public class ClientController {
 	public Client resetPassword(@RequestParam (required = true) String username,
 								 @RequestParam (required = true) String email,
 								 @RequestParam(required = true) String key) {
-		
+
 		return cs.verifyResetPasswordClient(username, email, key);
-		
+
 	}
 }

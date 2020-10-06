@@ -35,7 +35,7 @@ CREATE TABLE bug_report (
   PRIMARY KEY (bug_report_id),
   CONSTRAINT FK_application_id FOREIGN KEY (application_id) REFERENCES application (application_id)
 );
-	
+
 CREATE TABLE client (
   client_id int(11) NOT NULL AUTO_INCREMENT,
   client_first_name varchar(1000) NOT NULL DEFAULT 'hero with no name',
@@ -139,7 +139,7 @@ artifacts:
     - HelloWorld.js
 </code></pre>
 <p>Out of curiosity I thought it might have been a formatting error, but I tried checking in some garbage text and received the following error instead:</p>
-<pre><code>Phase context status code: YAML_FILE_ERROR Message: stat 
+<pre><code>Phase context status code: YAML_FILE_ERROR Message: stat
 </code></pre>
 </div>','Nuria','Low','High','Requested','In the back end',0,1594702003000,1594684800000,6,1);
 INSERT INTO bug_report(bug_report_id,bug_report_title,bug_report_description,bug_report_reproduction_steps,client_username,severity,priority,status,location,approved_time,resolved_time,date_created,point_value,application_id) VALUES (110,'My API keeps changing when I change the size of my screen','better','<p>Use the front end for more than 5 minutes.</p>','AlwaysDeugging','Medium','Medium','Unresolved','In the back end',1594858223623,0,1594857600000,5,1);
@@ -282,6 +282,8 @@ INSERT INTO client(client_id,client_first_name,client_last_name,client_username,
 INSERT INTO client(client_id,client_first_name,client_last_name,client_username,client_email,client_password,client_role) VALUES (309,'Kenneth','Davis','KD','kenneth.client@revature.com','password',0);
 INSERT INTO client(client_id,client_first_name,client_last_name,client_username,client_email,client_password,client_role) VALUES (310,'Kenneth','Davis','user','user@fake.com','password',0);
 INSERT INTO client(client_id,client_first_name,client_last_name,client_username,client_email,client_password,client_role) VALUES (317,'Kenneth','Davis','kenny.davis','kenneth.davis2@revature.com','password',0);
+INSERT INTO client(client_id,client_first_name,client_last_name,client_username,client_email,client_password,client_role) VALUES (318,'William','Gentry','william.gentry','william.gentry@revature.com','$2a$10$97GCVEL7iXNgR8MuSltN9.pHHXnNNjU0c.uoVpuYWHMgRKOljdS26', 2);
+INSERT INTO client(client_id,client_first_name,client_last_name,client_username,client_email,client_password,client_role) VALUES (319,'Demo','User','demo.user','demo@revature.com','$2a$10$97GCVEL7iXNgR8MuSltN9.pHHXnNNjU0c.uoVpuYWHMgRKOljdS26', 2);
 
 INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (1,'project 3 bug fix 2','change version of Spring to 2.6.6 from 3.1.0','Pending',1590541476321,1,1);
 INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (2,'Import world.doom.','package org.odata4j.tomcat ;','Accepted',1590541476321,22,3);
@@ -344,18 +346,18 @@ export class ApiServiceService {
   getClientById(id: number): Promise<Client> {
     return this.http.get<Client>(this.path + `/clients/NULL`).toPromise();
   }
-  //to be set within the login function 
+  //to be set within the login function
   setLoggedClient(client: Client) {
     localStorage.setItem(''client'', JSON.stringify(client));
   }
-  //to be used anywhere the user objec is needed  , it is better to call it in the component constructor 
+  //to be used anywhere the user objec is needed  , it is better to call it in the component constructor
   getLoggedClient(): Client {
     let val = localStorage.getItem(''client'');
     let client = new Client();
     client = JSON.parse(val)
     return client;
   }
-  //used on logout 
+  //used on logout
   clearLoggedClient() {
     localStorage.clear();
   }
@@ -365,16 +367,16 @@ export class ApiServiceService {
 
   //################ Start of Solution Section ###################
 
-  //1. Add new Solution 
+  //1. Add new Solution
   async postSolution(slution: Solution): Promise<any> {
     let ticketPromise = await this.http.post(this.path + "/solutions", slution).toPromise();
     return ticketPromise;
   }
-  //2. Get all Solutions  by Bug Report ID 
+  //2. Get all Solutions  by Bug Report ID
   getSolutionsByBugId(brId: number): Promise<Array<Solution>> {
     return this.http.get<Array<Solution>>(this.path + ''/query/solutions/bugreport?id='' + brId).toPromise();
   }
-  
+
   //################ End of Solution Section ###################
 }','Accepted',1590088470121,25,23);
 INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (18,'Fix the Service Html  3','<div class="container">
@@ -393,7 +395,7 @@ INSERT INTO solution(solution_id,solution_title,solution_description,status,subm
         <ng-container *ngIf="br.app !=null">
             <label id="lblapplication" class="col-sm-2 form-control-plaintext"> {{br.app.title}}</label>
 
-      
+
         </ng-container>      <label for="lbllocation" class="col-sm-2 col-form-label">Location:</label>
         <label id="lbllocation" class="col-sm-2 form-control-plaintext"> {{br.location}}</label>
 
@@ -535,10 +537,10 @@ INSERT INTO solution(solution_id,solution_title,solution_description,status,subm
 INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (28,'You are using the wrong tag','Thanks for the link. Does the maximum depend on the session.save_handler? From what I understand from scottmac@php.net it could. @Ryan Vincent - Right now I have set my session_set_cookie_params(4*7*24*60*60) in my phpinfo() I read that the session.cookie_lifetime is indeed this value. However after 24 minutes (the maximum lifetime set by session.gc_maxlifetime) kills it.','Accepted',1570123213123,1,102);
 INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (29,'set session to false if it is off','yes it is possible, if you do self session handler','Accepted',1591204212122,1,102);
 INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (37,'At least 30 fps','compressing things in H264 or H265 would be ideal, but sending that "on the fly" through the network without storing it to the disk (maybe that''s the only way) seems to be a nontrivial thing','Pending',1590678680645,186,108);
-INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (38,'The Observer','CurrentItem.AddObserver(this, new NSString("status"), 
+INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (38,'The Observer','CurrentItem.AddObserver(this, new NSString("status"),
     NSKeyValueObservingOptions.New | NSKeyValueObservingOptions.Initial,
     StatusObservationContext.Handle);','Accepted',1590678709868,186,2);
-INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (39,'Load Time Ranges','CurrentItem.AddObserver(this, new NSString("loadedTimeRanges"), 
+INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (39,'Load Time Ranges','CurrentItem.AddObserver(this, new NSString("loadedTimeRanges"),
     NSKeyValueObservingOptions.Initial | NSKeyValueObservingOptions.New,
     LoadedTimeRangesObservationContext.Handle);','Pending',1590678730641,186,32);
 INSERT INTO solution(solution_id,solution_title,solution_description,status,submitted_time,bug_report_id,solver_client_id) VALUES (43,'Use sudo','Use basic linux commands to run any programm (application) as root. MacOS should also support them, for example:
